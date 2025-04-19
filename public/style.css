@@ -1,0 +1,103 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background: #241F1F;
+    font-family: system-ui;
+}
+
+#channel-container{
+    width: 70svw;
+    height: 100svh;
+    display: flex;
+    margin-left: 50px;
+}
+
+.channel{
+    flex: 1;
+    max-width: 150px;
+    height: 100svh;
+    background: linear-gradient(to right, #8D0C0E44,#8D0C0E30, #8D0C0E44);
+}
+
+.channel header{
+    display: flex;
+    background-color: rgb(252, 99, 99);
+    width: 100%;
+    height: 50px;
+    align-items: center;
+    justify-content: space-evenly;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+button{
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    background-color: #8D0C0E;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0.4;
+}
+
+svg{
+    scale: 0.8;
+}
+
+button:hover{
+    scale: 0.95;
+}
+
+.mute{
+
+}
+
+#cursor{
+    position: absolute;
+    left: 0px;
+    width: 100%;
+}
+
+#cursor #line{
+    width: 80%;
+    height: 3px;
+    background-color: white;
+}
+
+#cursor #v{
+    position: relative;
+    width: 40px;
+    height: 40px;
+    left: 80%;
+    margin-left: -10px;
+    margin-top: 4px;
+    top: -15px;
+    font-size: 30px;
+    rotate: 90deg;
+    color: white;
+    font-weight: 500;
+    cursor: move;
+}
+
+#bpm{
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    color: white;
+    font-size: 1.5rem;
+}
+
+#bpm #bpm-input{
+    border: none;
+    background-color: transparent;
+    color: white;
+    font-size: 1.5rem;
+    width: 100px;
+}
