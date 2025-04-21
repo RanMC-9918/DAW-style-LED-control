@@ -14,13 +14,18 @@ body{
     height: 100svh;
     display: flex;
     margin-left: 50px;
+    gap: 2px;
 }
 
 .channel{
     flex: 1;
     max-width: 150px;
     height: 100svh;
-    background: linear-gradient(to right, #8D0C0E44,#8D0C0E30, #8D0C0E44);
+    background: #8D0C0E44
+}
+
+.channel.recording{
+    background: #8D0C0E66
 }
 
 .channel header{
@@ -55,12 +60,17 @@ button:hover{
     scale: 0.95;
 }
 
+.recording .record{
+    opacity: 1;
+}
+
 .mute{
 
 }
 
 #cursor{
     position: absolute;
+    top: 50px;
     left: 0px;
     width: 100%;
 }
@@ -86,18 +96,22 @@ button:hover{
     cursor: move;
 }
 
-#bpm{
+#head-info{
     position: fixed;
-    top: 10px;
+    bottom: 10px;
     right: 10px;
     color: white;
     font-size: 1.5rem;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.658);
+    padding: 10px 20px;
+    border-radius: 10px;
 }
 
-#bpm #bpm-input{
+#head-info *{
     border: none;
     background-color: transparent;
     color: white;
     font-size: 1.5rem;
-    width: 100px;
+    width: 70px;
 }

@@ -7,11 +7,43 @@ ws.onopen = () => {
 
 let cursor = document.getElementById("cursor");
 
-let inputs = [];
+let inputs = [[]];
 
 let res = 10;
 
 let keys = {};
+
+const channelContainer = document.getElementById("channel-container");
+
+const channelBase = document.getElementById("channel-base");
+
+for(let i = 0; i < 5; i++){
+  let clone = channelBase.cloneNode(true);
+  channelContainer.appendChild(clone);
+}
+
+
+const channels = document.getElementsByClassName("channel");
+
+for(let i = 0; i < channels.length; i++){
+  let recordBtn = channels[i].getElementsByClassName("record")[0];
+  recordBtn.addEventListener("click", () => {
+    changeActiveChannel(i);
+  })
+}
+
+let activeChannel_G = 0;
+
+function changeActiveChannel(index){
+  for (let i = 0; i < channels.length; i++) {
+    if(i == index){
+      channels[i].classList.add("recording");
+    }
+    else{
+      channels[i].classList.remove("recording");
+    }
+  }
+}
 
 
 let idling = true;
@@ -24,19 +56,37 @@ let bpm = 100;
 
 let sbb = 60.0 / bpm;
 
-document.getElementById("bpm-input").addEventListener("change", () => {
-  bpm = Number(document.getElementById("bpm-input").value);
-  sbb = 60.0 / bpm;
+let bpmInput = document
+  .getElementById("bpm-input");
+
+bpmInput.addEventListener("change", () => {
+    bpm = Number(bpmInput.value);
+    sbb = 60.0 / bpm;
+    clearInterval(tick);
+    tick = setInterval(tickFunc, (sbb * 1000) / npbInput.value);
+});
+
+let npbInput = document.getElementById("npb-input");
+
+npbInput.addEventListener("change", () => {
   clearInterval(tick);
-  tick = setInterval(tickFunc, sbb*1000);
-})
+  tick = setInterval(tickFunc, sbb * 1000 / npbInput.value);
+});
+
+let bpl = 16;
 
 let tick = setInterval(tickFunc, sbb*1000);
+
+let bplInput = document.getElementById("bpl-input");
+
+bplInput.addEventListener("change", () => {
+  bpl= bplInput.value;
+});
 
 function tickFunc(){
   cursor.style.top = res * time_G + 50 + "px";
   time_G++;
-  if (time_G > sbb * 4 * 33) {
+  if (time_G > (bpl)*npbInput.value-1){
     time_G = 0;
     //burst(1);
   }
@@ -46,19 +96,21 @@ function tickFunc(){
   let rSum = 0;
   let gSum = 0;
   let bSum = 0;
-  for (let i = 0; i < inputs.length; i++) {
-    rSum += Math.floor(
-      inputs[i].red *
-        inputs[i].falloff(time_G - inputs[i].startTime - inputs[i].duration)
-    );
-    gSum += Math.floor(
-      inputs[i].green *
-        inputs[i].falloff(time_G - inputs[i].startTime - inputs[i].duration)
-    );
-    bSum += Math.floor(
-      inputs[i].blue *
-        inputs[i].falloff(time_G - inputs[i].startTime - inputs[i].duration)
-    );
+  for(let j = 0; j < inputs.length; j++){
+    for (let i = 0; i < inputs[j].length; i++) {
+      rSum += Math.floor(
+        inputs[j][i].red *
+          inputs[j][i].falloff(time_G - inputs[j][i].startTime - inputs[j][i].duration)
+      );
+      gSum += Math.floor(
+        inputs[j][i].green *
+          inputs[j][i].falloff(time_G - inputs[j][i].startTime - inputs[j][i].duration)
+      );
+      bSum += Math.floor(
+        inputs[j][i].blue *
+          inputs[j][i].falloff(time_G - inputs[j][i].startTime - inputs[j][i].duration)
+      );
+    }
   }
 
   rSum = Math.min(255, rSum);
@@ -80,11 +132,11 @@ function burst(hue) {
   let red = mag * hue;
   let green = mag * (1 - hue);
   let blue = mag;
-  let foundInput = inputs.find(
+  let foundInput = inputs[activeChannel_G].find(
     (e) => e.red == red && e.green == green && e.blue == green && time_G == e.startTime + e.duration + 1
   );
   if (!foundInput) {
-    inputs.push({
+    inputs[activeChannel_G].push({
       red,
       green,
       blue,
