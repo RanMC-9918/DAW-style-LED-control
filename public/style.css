@@ -9,36 +9,7 @@ body{
     font-family: system-ui;
 }
 
-#channel-container{
-    width: 70svw;
-    height: 100svh;
-    display: flex;
-    margin-left: 50px;
-    gap: 2px;
-}
 
-.channel{
-    flex: 1;
-    max-width: 150px;
-    height: 100svh;
-    background: #8D0C0E44
-}
-
-.channel.recording{
-    background: #8D0C0E66
-}
-
-.channel header{
-    display: flex;
-    background-color: rgb(252, 99, 99);
-    width: 100%;
-    height: 50px;
-    align-items: center;
-    justify-content: space-evenly;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
 
 button{
     border-radius: 50%;
@@ -114,4 +85,46 @@ button:hover{
     color: white;
     font-size: 1.5rem;
     width: 70px;
+}
+
+#channel-container{
+    width: 70svw;
+    height: 100svh;
+    display: flex;
+    margin-left: 50px;
+    gap: 2px;
+}
+
+.channel{
+    flex: 1;
+    max-width: 150px;
+    height: 10000px;
+    background: #8D0C0E44;
+    outline: solid rgb(161, 161, 161) 3px;
+    position: relative;
+    padding: 0;
+}
+
+.channel.recording{
+    background: #8D0C0E66
+}
+
+.channel header{
+    display: flex;
+    background-color: rgb(252, 99, 99);
+    width: 100%;
+    height: 50px;
+    align-items: center;
+    justify-content: space-evenly;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.note{
+    position: absolute;
+    width: 100%;
+    background-color: red;
+    margin: 0;
+    left : 1px;
 }

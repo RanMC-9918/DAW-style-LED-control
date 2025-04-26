@@ -1,5 +1,5 @@
 
-let ws = new WebSocket("ws://192.168.12.232:8080"); //local IP addy
+let ws = new WebSocket("ws://192.168.86.28:8080"); //local IP addy
 ws.onopen = () => {
   console.log("Connected to WebSocket server");
   ws.send("client");
@@ -13,6 +13,14 @@ let res = 10;
 
 let keys = {};
 
+document.addEventListener("keydown", (e) => {
+  keys[e.key] = true;
+})
+
+document.addEventListener("keyup", (e) => {
+  keys[e.key] = false;
+})
+
 const channelContainer = document.getElementById("channel-container");
 
 const channelBase = document.getElementById("channel-base");
@@ -20,6 +28,7 @@ const channelBase = document.getElementById("channel-base");
 for(let i = 0; i < 5; i++){
   let clone = channelBase.cloneNode(true);
   channelContainer.appendChild(clone);
+  inputs.push([]);
 }
 
 
@@ -35,6 +44,7 @@ for(let i = 0; i < channels.length; i++){
 let activeChannel_G = 0;
 
 function changeActiveChannel(index){
+  activeChannel_G = index;
   for (let i = 0; i < channels.length; i++) {
     if(i == index){
       channels[i].classList.add("recording");
@@ -63,15 +73,15 @@ bpmInput.addEventListener("change", () => {
     bpm = Number(bpmInput.value);
     sbb = 60.0 / bpm;
     clearInterval(tick);
-    tick = setInterval(tickFunc, (sbb * 1000) / npbInput.value);
+    tick = setInterval(tickFunc, (sbb * 1000));
 });
 
-let npbInput = document.getElementById("npb-input");
+//let npbInput = document.getElementById("npb-input");
 
-npbInput.addEventListener("change", () => {
-  clearInterval(tick);
-  tick = setInterval(tickFunc, sbb * 1000 / npbInput.value);
-});
+// npbInput.addEventListener("change", () => {
+//   clearInterval(tick);
+//   tick = setInterval(tickFunc, sbb * 1000 / Number(npbInput.value));
+// });
 
 let bpl = 16;
 
@@ -80,13 +90,13 @@ let tick = setInterval(tickFunc, sbb*1000);
 let bplInput = document.getElementById("bpl-input");
 
 bplInput.addEventListener("change", () => {
-  bpl= bplInput.value;
+  bpl = bplInput.value;
 });
 
 function tickFunc(){
   cursor.style.top = res * time_G + 50 + "px";
   time_G++;
-  if (time_G > (bpl)*npbInput.value-1){
+  if (time_G > (bpl)){
     time_G = 0;
     //burst(1);
   }
@@ -158,8 +168,10 @@ function burst(hue) {
         return 1 - time;
       },
     });
+    refreshChannel(activeChannel_G);
   } else {
     foundInput.duration++;
+    refreshChannel(activeChannel_G);
   }
 }
 
@@ -169,4 +181,17 @@ function changeColor(red, green, blue) {
       green.toString().padStart(3, "0") +
       blue.toString().padStart(3, "0")
   );
+}
+
+function refreshChannel(channelI){
+  console.log("refreshing " + channelI);
+  let channel = channels[channelI];
+
+  inputs[channelI].forEach((e, i) => {
+    let note = document.createElement("div");
+    note.className = "note";
+    note.style.top = (e.startTime - 1) * res + 50 + "px"; // -1 cause its off the cursor height idk why
+    note.style.height = (e.duration + 1) * res + "px"; // +1 so 0 can be shown
+    channel.appendChild(note);
+  })
 }
